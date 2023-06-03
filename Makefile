@@ -46,7 +46,7 @@ $(APP_OBJS): $(INCLUDE)/tk1_mem.h app/app_proto.h app/blink.h
 
 .PHONY: clean
 clean:
-	$(RM) -f app/app.bin app/app.elf app/main.o
+	$(RM) -f app/app.bin app/app.elf app/*.o
 	$(RM) -f $(CLIENTAPP) cmd/app.bin
 
 # Uses ../.clang-format
