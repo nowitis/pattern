@@ -15,48 +15,11 @@ client app, with shared definitions.
 Most of the code here, including the build system, comes from 
 [Tillitis](github.com/tillitis/tillitis-key1-apps/)' own app repo. 
 
-## Licenses and SPDX tags
+## Building
+We recommend building the device app using Podman, and the client app
+using host tools, in this order. 
 
-Unless otherwise noted, the project sources are licensed under the
-terms and conditions of the "GNU General Public License v2.0 only":
-
-> Copyright Tillitis AB.
->
-> These programs are free software: you can redistribute it and/or
-> modify it under the terms of the GNU General Public License as
-> published by the Free Software Foundation, version 2 only.
->
-> These programs are distributed in the hope that it will be useful,
-> but WITHOUT ANY WARRANTY; without even the implied warranty of
-> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-> General Public License for more details.
-
-> You should have received a copy of the GNU General Public License
-> along with this program. If not, see:
->
-> https://www.gnu.org/licenses
-
-See [LICENSE](LICENSE) for the full GPLv2-only license text.
-
-External source code we have imported are isolated in their own
-directories. They may be released under other licenses. This is noted
-with a similar `LICENSE` file in every directory containing imported
-sources.
-
-The project uses single-line references to Unique License Identifiers
-as defined by the Linux Foundation's [SPDX project](https://spdx.org/)
-on its own source files, but not necessarily imported files. The line
-in each individual source file identifies the license applicable to
-that file.
-
-The current set of valid, predefined SPDX identifiers can be found on
-the SPDX License List at:
-
-https://spdx.org/licenses/
-
-All contributors must adhere to the [Developer Certificate of Origin](dco.md).
-
-## Building the device app
+### Building the device app
 
 You have two options, either Tillitis' OCI image
 `ghcr.io/tillitis/tkey-builder` for use with a rootless podman setup,
@@ -69,7 +32,7 @@ https://github.com/tillitis/tkey-libs
 
 Clone them next this repo and build them first.
 
-### Building the device app with Podman
+#### Building the device app with Podman
 
 Tillis provides an OCI image with all tools you can use to build the
 tkey-libs and the apps. If you have `make` and Podman installed you
@@ -89,7 +52,7 @@ apt install podman rootlesskit slirp4netns
 
 should be enough to get you a working Podman setup.
 
-### Building the device app with host tools
+#### Building the device app with host tools
 
 To build with native tools you need the `clang`, `llvm`, `lld`,
 `golang` packages installed. Version 15 or later of LLVM/Clang is
@@ -126,9 +89,9 @@ machine that emulates the platform. In both cases, the client apps
 will talk to the app over a serial port, virtual or real. There is a
 separate section below which explains running in QEMU.
 
-## Building the client app
+### Building the client app
 We advise to build the client app for your machine using host tools: 
-see the above section for requirements.
+see the above section for host tools requirements.
 
 To build the client app:
 
@@ -149,7 +112,7 @@ programming of the USB stick.
 Before running, here are some considerations regarding the connection
 between client app and device app. 
 
-### Users on Linux
+#### Users on Linux
 
 Running `lsusb` should list the USB stick as `1207:8887 Tillitis
 MTA1-USB-V1`. On Linux, the TKey's serial port device path is
@@ -207,7 +170,7 @@ ioreg -p IOUSB -w0 -l
 There should be an entry with `"USB Vendor Name" = "Tillitis"`.
 
 
-## Usage
+### Usage
 Run the app by invoking:
 
 ```
@@ -219,6 +182,49 @@ app will also perform a validation of the pattern loaded on the TKey,
 demonstrating bidirectional communication between client and device 
 app.
 
-### System
+
+## System
 
 For more details, please see [Tillitis documentation](https://github.com/tillitis/tillitis-key1/blob/main/doc/system_description/software.md)
+
+
+## Licenses and SPDX tags
+
+Unless otherwise noted, the project sources are licensed under the
+terms and conditions of the "GNU General Public License v2.0 only":
+
+> Copyright Tillitis AB.
+>
+> These programs are free software: you can redistribute it and/or
+> modify it under the terms of the GNU General Public License as
+> published by the Free Software Foundation, version 2 only.
+>
+> These programs are distributed in the hope that it will be useful,
+> but WITHOUT ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+> General Public License for more details.
+
+> You should have received a copy of the GNU General Public License
+> along with this program. If not, see:
+>
+> https://www.gnu.org/licenses
+
+See [LICENSE](LICENSE) for the full GPLv2-only license text.
+
+External source code we have imported are isolated in their own
+directories. They may be released under other licenses. This is noted
+with a similar `LICENSE` file in every directory containing imported
+sources.
+
+The project uses single-line references to Unique License Identifiers
+as defined by the Linux Foundation's [SPDX project](https://spdx.org/)
+on its own source files, but not necessarily imported files. The line
+in each individual source file identifies the license applicable to
+that file.
+
+The current set of valid, predefined SPDX identifiers can be found on
+the SPDX License List at:
+
+https://spdx.org/licenses/
+
+All contributors must adhere to the [Developer Certificate of Origin](dco.md).
