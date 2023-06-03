@@ -1,13 +1,16 @@
 # TK1 LED blinking demo app
 
 This repository contains a demo application to run on the TKey USB
-security stick, as well as companion client app (running on the host
-computer). The companion app loads a user-provided Morse code sequence,
-according to which the TKey application will blink its LED. 
+security stick ("device app"), as well as companion client app 
+("client app") running on the host computer. The client app loads
+a user-provided Morse code sequence, according to which the device 
+application will blink the LED on the TKey. 
 
 This repo has two goals:
-* to demonstrate communication between the TKey app and the companion app,
-* to provide a template for a monorepo including key-app & client-app.
+* to demonstrate communication between the device app and the 
+client app,
+* to provide a template for a monorepo including device app & 
+client app, with shared definitions. 
 
 Most of the code here, including the build system, comes from 
 [Tillitis](github.com/tillitis/tillitis-key1-apps/)' own app repo. 
@@ -53,9 +56,9 @@ https://spdx.org/licenses/
 
 All contributors must adhere to the [Developer Certificate of Origin](dco.md).
 
-## Building device apps
+## Building the device app
 
-You have two options, either our OCI image
+You have two options, either Tillitis' OCI image
 `ghcr.io/tillitis/tkey-builder` for use with a rootless podman setup,
 or native tools.
 
@@ -66,18 +69,18 @@ https://github.com/tillitis/tkey-libs
 
 Clone them next this repo and build them first.
 
-### Building with Podman
+### Building the device app with Podman
 
-We provide an OCI image with all tools you can use to build the
+Tillis provides an OCI image with all tools you can use to build the
 tkey-libs and the apps. If you have `make` and Podman installed you
 can us it like this in the `tkey-libs` directory and then this
 directory:
 
 ```
-make podman
+make podman-deviceapp
 ```
 
-and everything should be built. This assumes a working rootless
+and the key app should be built. This assumes a working rootless
 podman. On Ubuntu 22.10, running
 
 ```
@@ -86,7 +89,7 @@ apt install podman rootlesskit slirp4netns
 
 should be enough to get you a working Podman setup.
 
-### Building with host tools
+### Building the device app with host tools
 
 To build with native tools you need the `clang`, `llvm`, `lld`,
 `golang` packages installed. Version 15 or later of LLVM/Clang is
@@ -107,7 +110,7 @@ $ make
 Then go back to this directory and build everything:
 
 ```
-$ make
+$ make deviceapp
 ```
 
 If you cloned `tkey-libs` to somewhere else then the default set
@@ -123,6 +126,15 @@ machine that emulates the platform. In both cases, the client apps
 will talk to the app over a serial port, virtual or real. There is a
 separate section below which explains running in QEMU.
 
+## Building the client app
+We advise to build the client app for your machine using host tools: 
+see the above section for requirements.
+
+To build the client app:
+
+```
+$ make client
+```
 
 ## Running device apps
 
@@ -133,6 +145,9 @@ If it is not then please refer to
 [quickstart.md](https://github.com/tillitis/tillitis-key1/blob/main/doc/quickstart.md)
 (in the tillitis-key1 repository) for instructions on initial
 programming of the USB stick.
+
+Before running, here are some considerations regarding the connection
+between client app and device app. 
 
 ### Users on Linux
 
@@ -193,11 +208,16 @@ There should be an entry with `"USB Vendor Name" = "Tillitis"`.
 
 
 ## Usage
-Run the app by invoking
+Run the app by invoking:
 
 ```
-$ ./runpattern --pattern ".../---/..."
+$ runpattern --pattern ".../---/..."
 ```
+
+This will blink the TKey LED according to the SOS Morse pattern. The 
+app will also perform a validation of the pattern loaded on the TKey, 
+demonstrating bidirectional communication between client and device 
+app.
 
 ### System
 

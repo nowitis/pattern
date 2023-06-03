@@ -1,3 +1,4 @@
+CLIENTAPP = runpattern
 OBJCOPY ?= llvm-objcopy
 
 P := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -25,7 +26,10 @@ RM=/bin/rm
 
 
 .PHONY: all
-all: app/app.bin runpattern
+all: deviceapp client
+
+deviceapp: app/app.bin
+client: $(CLIENTAPP)
 
 # Turn elf into bin for device
 %.bin: %.elf
@@ -56,14 +60,14 @@ fmt:
 checkfmt:
 	clang-format --dry-run --ferror-limit=0 --Werror $(FMTFILES)
 
-podman-app:
-	podman run --rm --mount type=bind,source=$(CURDIR),target=/src --mount type=bind,source=$(CURDIR)/../tkey-libs,target=/tkey-libs -w /src -it ghcr.io/tillitis/tkey-builder:2 make -j app/app.bin
+podman-deviceapp:
+	podman run --rm --mount type=bind,source=$(CURDIR),target=/src --mount type=bind,source=$(CURDIR)/../tkey-libs,target=/tkey-libs -w /src -it ghcr.io/tillitis/tkey-builder:2 make -j deviceapp
 
 # .PHONY to let go-build handle deps and rebuilds
-.PHONY: cmd
-runpattern: app/app.bin
+.PHONY: $(CLIENTAPP)
+$(CLIENTAPP): app/app.bin
 	cp -af app/app.bin cmd/app.bin
-	CGO_CFLAGS="-I$(LIBDIR) -I$(INCLUDE) -I$(P)/app" go build -o runpattern ./cmd
+	CGO_CFLAGS="-I$(LIBDIR) -I$(INCLUDE) -I$(P)/app" go build -o $(CLIENTAPP) ./cmd
 
 .PHONY: lint
 lint:
