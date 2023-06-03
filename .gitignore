@@ -1,0 +1,10 @@
+ *.a
+*.o
+*.bin
+*.elf
+/runpattern
+/gotools/golangci-lint
+/gotools/go-winres
+test/venv
+
+.DS_Store
