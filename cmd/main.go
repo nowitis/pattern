@@ -131,12 +131,6 @@ Usage:
 		exit(1)
 	}
 
-	err = blinker.Execute()
-	if err != nil {
-		le.Printf("Execute failed: %v", err)
-		exit(1)
-	}
-
 	pattern_bytes, err := blinker.GetPattern((int)(C.pattern_step_packed_size()))
 	if err != nil {
 		le.Printf("GetPattern failed: %v", err)
@@ -147,6 +141,12 @@ Usage:
 		le.Printf("Retrieved pattern is consistent\n")
 	} else {
 		le.Printf("Retrieved pattern was inconsistent!\n")
+		exit(1)
+	}
+
+	err = blinker.Execute()
+	if err != nil {
+		le.Printf("Execute failed: %v", err)
 		exit(1)
 	}
 
